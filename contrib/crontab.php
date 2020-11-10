@@ -104,31 +104,32 @@ task('crontab:sync', function () {
     run ('unlink /tmp/crontab_save');
 });
 
+if (!function_exists('Deployer\parseJob')) {
+    function parseJob ($job) {
+        if (!is_string($job)) {
+            return NULL;
+        }
 
-function parseJob ($job) {
-    if (!is_string($job)) {
-        return NULL;
+        if (substr ($job, 0, 1) == '#') {
+            return NULL;
+        }
+
+        $jobData = explode (' ', $job, 6);
+
+        if (count ($jobData) != 6) {
+            return NULL;
+        }
+
+        return [
+            'skey' => md5 ($job),
+            'ckey' => md5 ($jobData['5']),
+            'minute' => $jobData['0'],
+            'hour' => $jobData['1'],
+            'day' => $jobData['2'],
+            'month' => $jobData['3'],
+            'weekday' => $jobData['4'],
+            'cmd' => $jobData['5'],
+        ];
     }
-
-    if (substr ($job, 0, 1) == '#') {
-        return NULL;
-    }
-
-    $jobData = explode (' ', $job, 6);
-
-    if (count ($jobData) != 6) {
-        return NULL;
-    }
-
-    return [
-        'skey' => md5 ($job),
-        'ckey' => md5 ($jobData['5']),
-        'minute' => $jobData['0'],
-        'hour' => $jobData['1'],
-        'day' => $jobData['2'],
-        'month' => $jobData['3'],
-        'weekday' => $jobData['4'],
-        'cmd' => $jobData['5'],
-    ];
 }
 

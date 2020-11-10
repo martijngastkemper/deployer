@@ -7,14 +7,9 @@ class CrontabE2ETest extends AbstractE2ETest
 {
     private const RECIPE = __DIR__ . '/contrib/crontab.php';
 
-    protected function setUp(): void
-    {
-        parent::setUp();
+    public function testAddingCrontab(): void {
 
         $this->init(self::RECIPE);
-    }
-
-    public function testAddingCrontab() {
 
         set('crontab:jobs', [
             '* * * * * command-x',
@@ -28,6 +23,12 @@ class CrontabE2ETest extends AbstractE2ETest
 
         self::assertStringContainsString('command-x: NEW', $this->tester->getDisplay());
 
+        $this->init(self::RECIPE);
+
+        set('crontab:jobs', [
+            '* * * * * command-x',
+        ]);
+
         // Run the crontab:sync again to assert the same job won't be added twice
         $this->tester->run([
            'crontab:sync',
@@ -38,7 +39,8 @@ class CrontabE2ETest extends AbstractE2ETest
         self::assertStringContainsString('command-x: OK', $this->tester->getDisplay());
     }
 
-    public function testUpdatingCrontab() {
+    public function testUpdatingCrontab(): void {
+        $this->init(self::RECIPE);
 
         set('crontab:jobs', [
             '1 * * * * command-y',
@@ -51,6 +53,8 @@ class CrontabE2ETest extends AbstractE2ETest
         ]);
 
         self::assertStringContainsString('command-y: NEW', $this->tester->getDisplay());
+
+        $this->init(self::RECIPE);
 
         set('crontab:jobs', [
             '2 * * * * command-y',

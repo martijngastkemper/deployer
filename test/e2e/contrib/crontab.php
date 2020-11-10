@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace Deployer;
 
-require_once __DIR__ . '/../../../contrib/crontab.php';
+require __DIR__ . '/../../../contrib/crontab.php';
 
 host('provisioned.test')
     ->set('timeout', 300)
@@ -11,10 +11,6 @@ host('provisioned.test')
        '-o UserKnownHostsFile=/dev/null',
        '-o StrictHostKeyChecking=no',
     ]);
-
-set('crontab:jobs', [
-    '* * * * * date >> cron.output',
-]);
 
 task('crontab-test:truncate', function() {
     run ("echo '' > /tmp/crontab_save");

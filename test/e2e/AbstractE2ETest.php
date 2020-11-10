@@ -14,11 +14,6 @@ abstract class AbstractE2ETest extends TestCase
      */
     protected $tester;
 
-    /**
-     * @var Deployer
-     */
-    protected $deployer;
-
     public static function setUpBeforeClass(): void
     {
         self::cleanUp();
@@ -47,9 +42,9 @@ abstract class AbstractE2ETest extends TestCase
         $console->setAutoExit(false);
         $this->tester = new ApplicationTester($console);
 
-        $this->deployer = new Deployer($console);
-        $this->deployer->importer->import($recipe);
-        $this->deployer->init();
-        $this->deployer->config->set('deploy_path', __TEMP_DIR__ . '/{{hostname}}');
+        $deployer = new Deployer($console);
+        $deployer->importer->import($recipe);
+        $deployer->init();
+        $deployer->config->set('deploy_path', __TEMP_DIR__ . '/{{hostname}}');
     }
 }
