@@ -103,6 +103,7 @@ CMD [ "start-servers" ]
 
 FROM ubuntu:20.04 AS provisioned
 RUN apt-get update && apt-get install -y \
+            cron \
             openssh-server \
             sudo \
     && rm -rf /var/lib/apt/lists/*
